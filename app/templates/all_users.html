@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy – Admin Panel{% endblock %}
+
+{% block content %}
+<section class="admin-hero">
+  <h1>Admin Panel</h1>
+  <p>All registered users and their generated workout plans</p>
+</section>
+
+<div class="admin-container container">
+
+  <!-- Stats Bar -->
+  <div class="admin-stats">
+    <div class="admin-stat">
+      <span class="admin-stat-num">{{ total_users }}</span>
+      <span class="admin-stat-label">Total Users</span>
+    </div>
+    {% for goal, count in goals.items() %}
+    <div class="admin-stat">
+      <span class="admin-stat-num">{{ count }}</span>
+      <span class="admin-stat-label">{{ goal }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if user_plans %}
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Weight</th>
+          <th>Goal</th>
+          <th>Intensity</th>
+          <th>Joined</th>
+          <th>Plan</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in user_plans %}
+        <tr>
+          <td class="td-num">{{ loop.index }}</td>
+          <td class="td-name">{{ item.user.name }}</td>
+          <td>{{ item.user.age }}</td>
+          <td>{{ item.user.weight }} kg</td>
+          <td>
+            <span class="goal-badge goal-{{ item.user.goal | lower | replace(' ', '-') }}">
+              {{ item.user.goal }}
+            </span>
+          </td>
+          <td>
+            <span class="intensity-badge intensity-{{ item.user.intensity }}">
+              {{ item.user.intensity | capitalize }}
+            </span>
+          </td>
+          <td class="td-date">{{ item.user.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            {% if item.plan %}
+            <a href="/plan/{{ item.plan.id }}" class="btn-view">View Plan →</a>
+            {% else %}
+            <span class="no-plan">No plan</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🏋️</div>
+    <h3>No users yet</h3>
+    <p>Users will appear here once they generate a fitness plan.</p>
+    <a href="/" class="btn-outline">Generate First Plan</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

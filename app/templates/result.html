@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy – Your Plan, {{ user.name }}{% endblock %}
+
+{% block content %}
+<section class="result-hero">
+  <div class="result-hero-inner">
+    <div class="result-badge">
+      {% if feedback_success %}✅ Plan Updated!{% else %}✅ Plan Generated!{% endif %}
+    </div>
+    <h1>Hey <span class="accent">{{ user.name }}</span>,<br>your plan is ready.</h1>
+    <div class="user-tags">
+      <span class="tag">🎯 {{ user.goal }}</span>
+      <span class="tag">⚡ {{ user.intensity | capitalize }} Intensity</span>
+      <span class="tag">🧍 {{ user.age }} yrs · {{ user.weight }} kg</span>
+    </div>
+  </div>
+</section>
+
+{% if error %}
+<div class="alert alert-error container">
+  <span class="alert-icon">⚠️</span> {{ error }}
+</div>
+{% endif %}
+
+{% if feedback_success %}
+<div class="alert alert-success container">
+  <span class="alert-icon">🎉</span> Your plan has been updated based on your feedback!
+</div>
+{% endif %}
+
+<div class="result-grid container">
+
+  <!-- Workout Plan -->
+  <div class="plan-card">
+    <div class="plan-card-header">
+      <h2>💪 Your 7-Day Workout Plan</h2>
+      <button class="btn-copy" onclick="copyPlan()">Copy Plan</button>
+    </div>
+    <div class="plan-content markdown-body" id="planContent">
+      {{ plan.plan_content | replace('\n', '<br>') | safe }}
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+
+    <!-- Nutrition Tip -->
+    {% if plan.nutrition_tip %}
+    <div class="tip-card">
+      <h3>🥗 Nutrition & Recovery</h3>
+      <div class="tip-content">
+        {{ plan.nutrition_tip | replace('\n', '<br>') | safe }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Feedback Form -->
+    <div class="feedback-card">
+      <h3>🔄 Refine Your Plan</h3>
+      <p>Not happy with something? Tell us what to change.</p>
+
+      {% if plan.feedback %}
+      <div class="prev-feedback">
+        <span class="prev-label">Your last feedback:</span>
+        <blockquote>{{ plan.feedback }}</blockquote>
+      </div>
+      {% endif %}
+
+      <form action="/feedback/{{ plan_id }}" method="POST" id="feedbackForm">
+        <textarea
+          name="feedback"
+          id="feedbackInput"
+          placeholder="e.g. Add more rest days, focus more on cardio, reduce leg exercises..."
+          rows="4"
+          required
+        ></textarea>
+        <button type="submit" class="btn-feedback" id="feedbackBtn">
+          <span class="btn-text">Update My Plan</span>
+          <span class="btn-loader" style="display:none;">Updating...</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-card">
+      <a href="/" class="btn-outline">← Create New Plan</a>
+      <button onclick="window.print()" class="btn-outline">🖨 Print Plan</button>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function copyPlan() {
+  const text = document.getElementById('planContent').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy Plan', 2000);
+  });
+}
+</script>
+{% endblock %}
