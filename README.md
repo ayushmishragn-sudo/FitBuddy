@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 💪 FitBuddy – AI Fitness Plan Generator
 
 A web-based application that uses **Google Gemini AI** to generate personalized 7-day workout plans and nutrition tips based on a user's fitness goals.
@@ -153,3 +154,7 @@ fitbuddy/
 | Amit Kumar | Member |
 | Ayush Kumar Mishra | Member |
 | Shivam Kumar Verma | Member |
+=======
+# FitBuddy
+this this my project
+>>>>>>> 486a5c215fa1ce53c8d622b0d0903b77cfb354a1
