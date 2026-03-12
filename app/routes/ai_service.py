@@ -7,7 +7,7 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 
-def get_model(model_name: str = "gemini-1.5-flash"):
+def get_model(model_name: str = "gemini-1.5-flash-latest"):
     return genai.GenerativeModel(model_name)
 
 
@@ -105,7 +105,7 @@ def regenerate_plan_with_feedback(
     original_plan: str, feedback: str
 ) -> str:
     """Regenerate a workout plan based on user feedback."""
-    model = get_model("gemini-1.5-pro")
+    model = get_model("gemini-1.5-pro-latest")
 
     prompt = f"""
 You are a professional fitness coach. A client has provided feedback on their workout plan and needs an updated version.
